@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+title: "PET/MRI Longitudinal Analysis Template"
+message: "If you use or adapt this repository, please cite it as below."
+type: software
+
+authors:
+  - family-names: "Chu"
+    given-names: "Georgina W."
+    affiliation: "Independent researcher"
+    orcid: https://orcid.org/0009-0007-3645-795X
+
+abstract: >
+  This repository provides a reproducible R/Quarto template for analyzing
+  simulated longitudinal PET/MRI and cognitive data. It demonstrates
+  simulated data organization, neuroimaging-style quality-control checks,
+  paired longitudinal completeness checks, descriptive summaries,
+  mixed-effects longitudinal modeling, within-person and between-person
+  PET marker decomposition, change-score sensitivity analysis, and
+  Quarto-based reporting. The repository uses simulated data only and does
+  not contain real participant data, raw neuroimaging files, unpublished
+  project materials, or collaborator-owned results.
+
+keywords:
+  - PET
+  - MRI
+  - neuroimaging
+  - longitudinal analysis
+  - cognitive neuroscience
+  - mixed-effects models
+  - quality control
+  - reproducible research
+  - Quarto
+  - R
+
+license: MIT
+
+repository-code: "https://github.com/ggchu39/pet-mri-longitudinal-analysis-template"
+
+date-released: "2026-05-12"
+version: "0.1.0"
