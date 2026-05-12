@@ -1,6 +1,13 @@
 # 05_change_score_models.R
 # Change-score sensitivity models for the simulated PET/MRI/cognition dataset.
-# This script demonstrates a simple longitudinal change analysis using simulated data only.
+# This script demonstrates a simple longitudinal change analysis using simulated data only:
+#1. paired wide-format restructuring;
+#2. raw change-score modeling;
+#3. PET-change and MRI-change predictors;
+#4. age interaction testing;
+#5. percent-change sensitivity analysis;
+#6. report-ready tables and figures.
+
 
 # ---- Setup ----
 
