@@ -14,3 +14,27 @@ The workflow is inspired by common research questions in cognitive neuroscience 
 All data in this repository are simulated. No real participant-level data, clinical data, raw imaging files, private analysis outputs, or unpublished collaborator materials are included.
 
 The variable names and values are generic and are used only to demonstrate reproducible workflow structure, quality-control logic, and statistical modeling principles.
+
+**Variables:** 
+participant_id
+timepoint
+age_baseline
+sex
+scanner_site
+pet_marker_bpnd
+mri_volume_index
+memory_score
+registration_qc
+motion_qc
+processing_qc
+
+
+## Current workflow: 12 May 2026
+
+The initial workflow includes:
+
+1. Simulated longitudinal PET/MRI/cognition data generation.
+2. Neuroimaging-style quality-control flags.
+3. Preparation for paired longitudinal modelling and transparent reporting.
+
+
