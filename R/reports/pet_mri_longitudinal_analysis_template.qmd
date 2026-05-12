@@ -1,0 +1,296 @@
+---
+title: "PET/MRI Longitudinal Analysis Template"
+subtitle: "Simulated data workflow for QC, longitudinal modeling, and change-score sensitivity analysis"
+author: "Georgina W. Chu"
+date: 12 May 2026
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: cosmo
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# Overview
+
+This report demonstrates a reproducible workflow for analysing simulated longitudinal PET/MRI and cognitive data.
+
+The aim is to show a protected public example of:
+
+- simulated PET/MRI-style data organization;
+- neuroimaging-style quality-control logic;
+- paired longitudinal completeness checks;
+- descriptive summaries and visualization;
+- mixed-effects longitudinal modeling;
+- within-person and between-person PET marker decomposition;
+- change-score sensitivity analysis.
+
+This report uses simulated data only. It does not contain real participant data, clinical data, raw neuroimaging files, unpublished project materials, or collaborator-owned results.
+
+# Data protection and scope
+
+All data in this repository are simulated. The variable names are generic and are used only to demonstrate workflow structure, quality-control logic, and statistical modeling principles.
+
+The workflow is inspired by common analytical tasks in cognitive neuroscience and PET/MRI research, including the analysis of molecular imaging markers, structural MRI-derived measures, and cognitive performance across repeated assessments.
+
+# Workflow structure
+
+The repository is organized as follows:
+
+```{r}
+list.files("R")
+```
+
+The scripts are intended to be run in this order:
+
+```text
+R/01_simulate_data.R
+R/02_qc_checks.R
+R/03_descriptives.R
+R/04_longitudinal_models.R
+R/05_change_score_models.R
+```
+
+# Load analysis outputs
+
+```{r}
+sample_summary <- read.csv("../outputs/tables/descriptive_sample_summary.csv")
+sex_summary <- read.csv("../outputs/tables/descriptive_sex_summary.csv")
+site_summary <- read.csv("../outputs/tables/descriptive_scanner_site_summary.csv")
+numeric_summary <- read.csv("../outputs/tables/descriptive_numeric_by_timepoint.csv")
+
+qc_summary <- read.csv("../outputs/tables/qc_exclusion_summary.csv")
+paired_summary <- read.csv("../outputs/tables/qc_paired_summary.csv")
+
+longitudinal_effects <- read.csv("../outputs/tables/longitudinal_model_fixed_effects.csv")
+longitudinal_comparison <- read.csv("../outputs/tables/longitudinal_model_comparison.csv")
+
+change_effects <- read.csv("../outputs/tables/change_score_model_fixed_effects.csv")
+change_comparison <- read.csv("../outputs/tables/change_score_model_comparison.csv")
+```
+
+# Simulated dataset
+
+The simulated dataset contains repeated observations for each participant. The core variables include:
+
+```text
+participant_id
+timepoint
+age_baseline
+sex
+scanner_site
+pet_marker_bpnd
+mri_volume_index
+memory_score
+registration_qc
+motion_qc
+processing_qc
+```
+
+The PET marker is represented as a generic binding-potential-style variable. The MRI variable is represented as a generic volume index. The cognitive variable is represented as a generic memory score.
+
+# Quality control
+
+Neuroimaging workflows require explicit quality-control decisions before statistical modeling. In this template, QC checks include:
+
+- missingness checks;
+- implausible value checks;
+- registration QC flags;
+- motion QC flags;
+- processing QC flags;
+- paired longitudinal completeness checks.
+
+## QC exclusion summary
+
+```{r}
+qc_summary
+```
+
+## Paired longitudinal completeness
+
+```{r}
+paired_summary
+```
+
+These QC outputs are intentionally simple but demonstrate transparent exclusion logic and participant-level paired-data tracking.
+
+# Descriptive summaries
+
+## Sample summary
+
+```{r}
+sample_summary
+```
+
+## Sex distribution
+
+```{r}
+sex_summary
+```
+
+## Scanner site distribution
+
+```{r}
+site_summary
+```
+
+## Numeric summaries by timepoint
+
+```{r}
+numeric_summary
+```
+
+# Descriptive figures
+
+## PET marker distribution
+
+```{r, echo=false, out.width="80%"}
+knitr::include_graphics("../outputs/figures/figure_01_pet_marker_distribution.png")
+```
+
+## MRI volume index distribution
+
+```{r, echo=false, out.width="80%"}
+knitr::include_graphics("../outputs/figures/figure_02_mri_volume_distribution.png")
+```
+
+## Memory score by timepoint
+
+```{r, echo=false, out.width="80%"}
+knitr::include_graphics("../outputs/figures/figure_03_memory_by_timepoint.png")
+```
+
+## PET marker and memory score
+
+```{r, echo=false, out.width="80%"}
+knitr::include_graphics("../outputs/figures/figure_04_pet_memory_scatter.png")
+```
+
+## Distribution of memory score by timepoint
+
+```{r, echo=false, out.width="80%"}
+knitr::include_graphics("../outputs/figures/figure_05_memory_density_by_timepoint.png")
+```
+
+# Longitudinal mixed-effects models
+
+The longitudinal analysis demonstrates repeated-measures modelling using participant-level random intercepts.
+
+Three models are included:
+
+```text
+Model 1: Basic longitudinal model
+Model 2: Within-person / between-person PET model
+Model 3: PET by age interaction model
+```
+
+The basic model estimates memory score as a function of time, PET marker, MRI volume index, baseline age, sex, scanner site, and participant-level random intercept.
+
+The within-person / between-person model separates PET marker variation within individuals over time from between-person differences in average PET marker level.
+
+The PET by age interaction model demonstrates how one might test whether the association between PET marker and memory differs by baseline age.
+
+## Longitudinal fixed effects
+
+```{r}
+longitudinal_effects
+```
+
+## Longitudinal model comparison
+
+```{r}
+longitudinal_comparison
+```
+
+## Observed versus predicted memory score
+
+```{r, echo=false, out.width="80%"}
+knitr::include_graphics("../outputs/figures/figure_06_observed_vs_predicted_memory.png")
+```
+
+## Predicted memory by PET marker
+
+```{r, echo=false, out.width="80%"}
+knitr::include_graphics("../outputs/figures/figure_07_predicted_memory_by_pet_marker.png")
+```
+
+# Change-score sensitivity analysis
+
+The change-score analysis uses paired T1/T2 data to calculate:
+
+```text
+delta_memory = memory_T2 - memory_T1
+delta_pet_marker = PET_T2 - PET_T1
+delta_mri_volume = MRI_T2 - MRI_T1
+```
+
+It also includes percentage-change versions as a simple sensitivity analysis.
+
+Three models are included:
+
+```text
+Model 1: Raw change-score model
+Model 2: Change-score PET by age interaction model
+Model 3: Percent-change sensitivity model
+```
+
+## Change-score fixed effects
+
+```{r}
+change_effects
+```
+
+## Change-score model comparison
+
+```{r}
+change_comparison
+```
+
+## Change in PET marker and change in memory
+
+```{r, echo=false, out.width="80%"}
+knitr::include_graphics("../outputs/figures/figure_08_delta_pet_delta_memory.png")
+```
+
+## Change in MRI volume and change in memory
+
+```{r, echo=false, out.width="80%"}
+knitr::include_graphics("../outputs/figures/figure_09_delta_mri_delta_memory.png")
+```
+
+## Percent change in PET marker and memory
+
+```{r, echo=false, out.width="80%"}
+knitr::include_graphics("../outputs/figures/figure_10_percent_change_pet_memory.png")
+```
+
+# Interpretation
+
+This workflow demonstrates how a protected public repository can show relevant PET/MRI analysis skills without exposing real data or unpublished results.
+
+The main strengths demonstrated are:
+
+- clear project organisation;
+- reproducible R scripts;
+- explicit QC decision rules;
+- paired longitudinal completeness checks;
+- mixed-effects modelling for repeated observations;
+- within-person and between-person decomposition;
+- change-score sensitivity analysis;
+- report-ready tables and figures.
+
+Because the data are simulated, the numerical results should not be interpreted as scientific findings. The purpose of this repository is methodological demonstration.
+
+# Limitations
+
+This template is intentionally simplified. It does not include raw NIfTI images, BIDS validation, PET preprocessing, MRI segmentation, partial-volume correction, image registration, or scanner harmonization.
+
+Those steps would normally be part of a full neuroimaging project. Here, the focus is on the downstream data-analytic workflow: QC tracking, longitudinal modeling, sensitivity analysis, and transparent reporting.
+
+# Reproducibility note
+
+This report was generated using Quarto and R. The repository is designed so that all tables and figures can be regenerated from the scripts using simulated data.
