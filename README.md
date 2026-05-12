@@ -36,5 +36,11 @@ The initial workflow includes:
 1. Simulated longitudinal PET/MRI/cognition data generation.
 2. Neuroimaging-style quality-control flags.
 3. Preparation for paired longitudinal modelling and transparent reporting.
+4. How to run the workflow: 
 
+From the repository root, run:
 
+```r
+source("R/00_run_all.R")
+
+[#This will simulate the dataset; run QC checks; create descriptive summaries and figures; fit longitudinal mixed-effects models; run change-score sensitivity models; export tables and figures to the outputs/ folder.]
